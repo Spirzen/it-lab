@@ -8,7 +8,7 @@ import {
   pathSegmentsToHref,
 } from './parse-markdown.mjs';
 import {renderMarkdownToHtml} from './render-markdown.mjs';
-import {buildPortalCardListHtml, extractTocFromMarkdown} from '../markdown/shared.mjs';
+import {buildPortalCardListHtml, extractTocFromMarkdown, sortByDocPath, compareByDocPath, categoryOrderKey} from '../markdown/shared.mjs';
 
 const SPIRZEN_BASE = 'https://spirzen.ru';
 
@@ -24,7 +24,7 @@ export async function loadLabPages(contentDir) {
     pages.push(await buildLabPage(page, byHref, dir));
   }
 
-  pages.sort((a, b) => a.href.localeCompare(b.href, 'ru'));
+  pages.sort(compareByDocPath);
 
   return {
     pages,
@@ -89,7 +89,7 @@ function buildDocCardListHtml(page, byHref, contentDir) {
     }
   }
 
-  items.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
+  sortByDocPath(items);
   if (items.length === 0) {
     return '';
   }
@@ -168,13 +168,10 @@ function buildSidebar(pages) {
   }
 
   for (const [label, categoryPages] of [...categories.entries()].sort((a, b) =>
-    a[0].localeCompare(b[0], 'ru'),
+    categoryOrderKey(a[1]).localeCompare(categoryOrderKey(b[1]), 'ru'),
   )) {
     const intro = categoryPages.find((p) => p.isIntro);
-    const children = categoryPages
-      .filter((p) => !p.isIntro)
-      .sort((a, b) => a.title.localeCompare(b.title, 'ru'))
-      .map((p) => ({
+    const children = sortByDocPath(categoryPages.filter((p) => !p.isIntro)).map((p) => ({
         slug: p.pathSlug,
         label: p.title,
         href: p.href,
