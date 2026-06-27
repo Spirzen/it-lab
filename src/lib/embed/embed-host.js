@@ -1,5 +1,6 @@
 import {acquirePageScrollLock} from './embed-scroll-lock.js';
 import {createHeightScheduler} from './embed-viewport.js';
+import {mountLoader} from './itu-loader.js';
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -170,8 +171,11 @@ export function initEmbedHost(options) {
 
     const mask = document.createElement('div');
     mask.className = `${prefix}__loading`;
-    mask.setAttribute('role', 'status');
-    mask.textContent = loadingMessage;
+    mountLoader(mask, {
+      title: kind === 'play' ? 'Play IT' : 'Код IT',
+      label: loadingMessage,
+      variant: 'overlay',
+    });
     frameHost.append(mask, iframe);
 
     iframe.addEventListener('load', () => {

@@ -167,6 +167,13 @@
   margin: 0 auto;
 }
 
+.portal-shell.has-sidebar .portal-content,
+.portal-shell.has-toc .portal-content {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+}
+
 .portal-hero {
   margin-bottom: 1.75rem;
   padding: 1.5rem 1.35rem;
@@ -405,14 +412,14 @@
   background: var(--itu-bg);
 }
 
-.itu-play-embed__loading {
+.itu-play-embed__loading,
+.itu-code-embed__loading {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
-  font-size: 0.9rem;
-  color: var(--itu-text-muted);
-  background: var(--itu-bg-subtle);
+  z-index: 2;
+  border: none;
+  background: transparent;
+  pointer-events: none;
 }
 
 .itu-play-embed__caption {
@@ -500,16 +507,6 @@
   width: 100%;
   border: none;
   background: var(--itu-bg);
-}
-
-.itu-code-embed__loading {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-size: 0.9rem;
-  color: var(--itu-text-muted);
-  background: var(--itu-bg-subtle);
 }
 
 .itu-code-embed__caption {
