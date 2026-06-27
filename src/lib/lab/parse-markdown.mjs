@@ -6,7 +6,6 @@ export {parseLabMarkdownFile, listMarkdownFilesRecursive, slugToPathSegments, pa
 
 const SPIRZEN_BASE = 'https://spirzen.ru';
 const TERMS_BASE = 'https://terms.spirzen.ru';
-const CODE_BASE = 'https://code.spirzen.ru';
 
 function listMarkdownFilesRecursive(dir, baseDir = dir) {
   if (!fs.existsSync(dir)) {
@@ -101,6 +100,7 @@ function prepareLabBody(content) {
   body = body.replace(/import\s+[\s\S]*?from\s+['"]@site\/[^'"]+['"];?\s*/g, '');
   body = transformPlayEmbeds(body);
   body = transformCodeEmbeds(body);
+  body = transformLabTrainersHub(body);
   body = body.replace(/<DocCardList\s*\/>/g, '<!-- DOC_CARD_LIST -->');
   body = stripRemainingJsx(body);
   body = stripArticleTags(body);
@@ -111,6 +111,7 @@ function prepareLabBody(content) {
 function transformPlayEmbeds(content) {
   return content.replace(/<ExternalPlayEmbed\s+([\s\S]*?)\/>/g, (_, attrs) => {
     const example = readAttr(attrs, 'example');
+    const src = readAttr(attrs, 'src');
     const title = readAttr(attrs, 'title');
     const minHeight = readAttr(attrs, 'minHeight', {jsx: true}) ?? '320';
     const playProps = readPlayProps(attrs);
@@ -118,6 +119,7 @@ function transformPlayEmbeds(content) {
     return [
       `<div class="itu-play-embed"`,
       `data-example="${escapeAttr(example)}"`,
+      `data-src="${escapeAttr(src)}"`,
       `data-title="${escapeAttr(title)}"`,
       `data-min-height="${escapeAttr(minHeight)}"`,
       `data-play-props="${propsJson}">`,
@@ -130,17 +132,19 @@ function transformCodeEmbeds(content) {
   return content.replace(/<ExternalCodeEmbed\s+([\s\S]*?)\/>/g, (_, attrs) => {
     const example = readAttr(attrs, 'example');
     const title = readAttr(attrs, 'title');
-    const pageUrl = `${CODE_BASE}/e/${example.replace(/^\/+|\/+$/g, '')}/`;
+    const minHeight = readAttr(attrs, 'minHeight', {jsx: true}) ?? '280';
     return [
-      `<div class="itu-code-embed" data-example="${escapeAttr(example)}" data-title="${escapeAttr(title)}">`,
-      `<p class="itu-code-embed__stub">`,
-      `<a href="${pageUrl}" target="_blank" rel="noopener noreferrer">`,
-      `${escapeHtml(title || example)} — полный пример на code.spirzen.ru ↗`,
-      `</a>`,
-      `</p>`,
+      `<div class="itu-code-embed"`,
+      `data-example="${escapeAttr(example)}"`,
+      `data-title="${escapeAttr(title)}"`,
+      `data-min-height="${escapeAttr(minHeight)}">`,
       `</div>`,
     ].join(' ');
   });
+}
+
+function transformLabTrainersHub(content) {
+  return content.replace(/<LabTrainersHub\s*\/>/g, '<div class="itu-trainers-hub"></div>');
 }
 
 function readAttr(attrs, name, options = {}) {

@@ -15,7 +15,16 @@ function readTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
-function buildEmbedSrc(baseUrl, example, playProps, theme) {
+function buildEmbedSrc(baseUrl, example, src, playProps, theme) {
+  if (src) {
+    try {
+      const url = new URL(src);
+      url.searchParams.set('theme', theme);
+      return url.toString();
+    } catch {
+      return src;
+    }
+  }
   const url = new URL(buildPlayEmbedUrl(baseUrl, example));
   url.searchParams.set('theme', theme);
   if (playProps && typeof playProps === 'object') {
@@ -31,6 +40,7 @@ function buildEmbedSrc(baseUrl, example, playProps, theme) {
 
 function initPlayEmbed(host) {
   const example = host.dataset.example ?? '';
+  const src = host.dataset.src ?? '';
   const title = host.dataset.title ?? 'IT Play';
   const minHeight = Number(host.dataset.minHeight ?? 320);
   let playProps = {};
@@ -42,7 +52,7 @@ function initPlayEmbed(host) {
 
   const baseUrl = getPlayBaseUrl();
   const playOrigin = new URL(baseUrl).origin;
-  const fullPageUrl = buildPlayPageUrl(baseUrl, example);
+  const fullPageUrl = src || buildPlayPageUrl(baseUrl, example);
 
   host.style.minHeight = `${minHeight}px`;
   host.classList.add('itu-play-embed--pending');
@@ -100,7 +110,7 @@ function initPlayEmbed(host) {
     iframe.referrerPolicy = 'no-referrer-when-downgrade';
     iframe.allow = 'fullscreen';
     iframe.style.height = `${currentHeight}px`;
-    iframe.src = buildEmbedSrc(baseUrl, example, playProps, theme);
+    iframe.src = buildEmbedSrc(baseUrl, example, src, playProps, theme);
 
     const mask = document.createElement('div');
     mask.className = 'itu-play-embed__loading';
