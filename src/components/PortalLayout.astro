@@ -1,0 +1,70 @@
+---
+import EcosystemNav from './EcosystemNav.astro';
+import '../styles/tokens.css';
+import '../styles/layout.css';
+
+/** @typedef {{ id: string, label: string, href: string, active?: boolean }} NavItem */
+
+interface Props {
+  title: string;
+  description?: string;
+  brandLabel: string;
+  brandHref: string;
+  navItems: NavItem[];
+  hasSidebar?: boolean;
+  ecosystemConfigJson?: string;
+}
+
+const {
+  title,
+  description = '',
+  brandLabel,
+  brandHref,
+  navItems,
+  hasSidebar = false,
+  ecosystemConfigJson = '{}',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{title}</title>
+    {description ? <meta name="description" content={description} /> : null}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline id="itu-ecosystem-config" type="application/json" set:html={ecosystemConfigJson} />
+    <script is:inline>
+      (function () {
+        try {
+          var k = 'itu-portal-theme';
+          var s = localStorage.getItem(k);
+          var t =
+            s === 'light' || s === 'dark'
+              ? s
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.dataset.theme = t;
+          document.documentElement.classList.toggle('dark', t === 'dark');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <EcosystemNav brandLabel={brandLabel} brandHref={brandHref} navItems={navItems} />
+    <div class:list={['portal-shell', hasSidebar && 'has-sidebar']}>
+      <slot name="sidebar" />
+      <main class="portal-main" id="main-content">
+        <div class="portal-content">
+          <slot />
+        </div>
+      </main>
+    </div>
+    <script type="module">
+      import '@/lib/theme.js';
+    </script>
+  </body>
+</html>

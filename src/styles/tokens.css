@@ -1,0 +1,105 @@
+:root {
+  color-scheme: light dark;
+  --itu-font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial,
+    sans-serif;
+  --itu-font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+
+  --itu-bg: #f4f6fb;
+  --itu-bg-elevated: #ffffff;
+  --itu-bg-subtle: #e8edf7;
+  --itu-text: #0f172a;
+  --itu-text-muted: #475569;
+  --itu-border: #cbd5e1;
+  --itu-accent: #5b21b6;
+  --itu-accent-soft: #ede9fe;
+  --itu-accent-hover: #4c1d95;
+  --itu-link: #6d28d9;
+  --itu-link-hover: #5b21b6;
+  --itu-nav-bg: rgba(255, 255, 255, 0.92);
+  --itu-shadow: 0 10px 40px rgba(15, 23, 42, 0.08);
+  --itu-radius: 14px;
+  --itu-radius-sm: 8px;
+  --itu-content-width: 760px;
+  --itu-sidebar-width: 280px;
+  --itu-nav-height: 56px;
+}
+
+:root[data-theme='dark'],
+:root.dark {
+  --itu-bg: #0b1020;
+  --itu-bg-elevated: #121a2e;
+  --itu-bg-subtle: #1a2440;
+  --itu-text: #e2e8f0;
+  --itu-text-muted: #94a3b8;
+  --itu-border: #334155;
+  --itu-accent: #a78bfa;
+  --itu-accent-soft: #2e1065;
+  --itu-accent-hover: #c4b5fd;
+  --itu-link: #c4b5fd;
+  --itu-link-hover: #ddd6fe;
+  --itu-nav-bg: rgba(11, 16, 32, 0.92);
+  --itu-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--itu-font-sans);
+  font-size: 17px;
+  line-height: 1.65;
+  background: var(--itu-bg);
+  color: var(--itu-text);
+}
+
+a {
+  color: var(--itu-link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--itu-link-hover);
+}
+
+code {
+  font-family: var(--itu-font-mono);
+  font-size: 0.92em;
+  background: var(--itu-bg-subtle);
+  padding: 0.12em 0.35em;
+  border-radius: 4px;
+}
+
+pre {
+  overflow-x: auto;
+  padding: 1rem 1.1rem;
+  border-radius: var(--itu-radius-sm);
+  background: var(--itu-bg-subtle);
+  border: 1px solid var(--itu-border);
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

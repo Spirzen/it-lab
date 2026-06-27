@@ -1,0 +1,23 @@
+---
+interface Props {
+  title?: string;
+  items: Array<{ slug: string; label: string; href: string; active?: boolean }>;
+}
+
+const {title = 'Разделы', items} = Astro.props;
+---
+
+<aside class="portal-sidebar" aria-label={title}>
+  <p class="portal-sidebar__title">{title}</p>
+  <ul class="portal-sidebar__list">
+    {
+      items.map((item) => (
+        <li>
+          <a class:list={['portal-sidebar__link', item.active && 'is-active']} href={item.href}>
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</aside>

@@ -1,0 +1,311 @@
+.ecosystem-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: var(--itu-nav-height);
+  padding: 0 1.25rem;
+  border-bottom: 1px solid var(--itu-border);
+  background: var(--itu-nav-bg);
+  backdrop-filter: blur(10px);
+}
+
+.ecosystem-nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 700;
+  color: var(--itu-text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ecosystem-nav__brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--itu-accent), #2563eb);
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.ecosystem-nav__links {
+  display: flex;
+  flex: 1;
+  gap: 0.35rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 2px;
+}
+
+.ecosystem-nav__link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  color: var(--itu-text-muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+
+.ecosystem-nav__link:hover {
+  color: var(--itu-text);
+  background: var(--itu-bg-subtle);
+}
+
+.ecosystem-nav__link.is-active {
+  color: var(--itu-accent);
+  background: var(--itu-accent-soft);
+  font-weight: 600;
+}
+
+.ecosystem-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--itu-border);
+  border-radius: 999px;
+  background: var(--itu-bg-elevated);
+  color: var(--itu-text);
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--itu-accent);
+  transform: scale(1.04);
+}
+
+.portal-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: calc(100vh - var(--itu-nav-height));
+}
+
+@media (min-width: 960px) {
+  .portal-shell.has-sidebar {
+    grid-template-columns: var(--itu-sidebar-width) minmax(0, 1fr);
+  }
+}
+
+.portal-sidebar {
+  border-bottom: 1px solid var(--itu-border);
+  background: var(--itu-bg-elevated);
+  padding: 1rem 1rem 1.25rem;
+}
+
+@media (min-width: 960px) {
+  .portal-sidebar {
+    position: sticky;
+    top: var(--itu-nav-height);
+    align-self: start;
+    max-height: calc(100vh - var(--itu-nav-height));
+    overflow: auto;
+    border-bottom: none;
+    border-right: 1px solid var(--itu-border);
+  }
+}
+
+.portal-sidebar__title {
+  margin: 0 0 0.75rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--itu-text-muted);
+}
+
+.portal-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.portal-sidebar__link {
+  display: block;
+  padding: 0.35rem 0.55rem;
+  border-radius: var(--itu-radius-sm);
+  color: var(--itu-text-muted);
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+.portal-sidebar__link:hover,
+.portal-sidebar__link.is-active {
+  color: var(--itu-text);
+  background: var(--itu-bg-subtle);
+}
+
+.portal-sidebar__link.is-active {
+  font-weight: 600;
+  color: var(--itu-accent);
+}
+
+.portal-main {
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.portal-content {
+  max-width: var(--itu-content-width);
+  margin: 0 auto;
+}
+
+.portal-hero {
+  margin-bottom: 1.75rem;
+  padding: 1.5rem 1.35rem;
+  border-radius: var(--itu-radius);
+  border: 1px solid var(--itu-border);
+  background: linear-gradient(135deg, var(--itu-bg-elevated), var(--itu-accent-soft));
+  box-shadow: var(--itu-shadow);
+}
+
+.portal-hero h1 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.15;
+}
+
+.portal-hero p {
+  margin: 0;
+  color: var(--itu-text-muted);
+}
+
+.portal-footer {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--itu-border);
+  font-size: 0.88rem;
+  color: var(--itu-text-muted);
+}
+
+.placeholder-card {
+  padding: 2rem 1.5rem;
+  border-radius: var(--itu-radius);
+  border: 1px dashed var(--itu-border);
+  background: var(--itu-bg-elevated);
+  text-align: center;
+}
+
+.placeholder-card h1 {
+  margin-top: 0;
+}
+
+.term-index {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.term-entry {
+  scroll-margin-top: calc(var(--itu-nav-height) + 1rem);
+  padding-top: 0.25rem;
+}
+
+.term-entry h2 {
+  margin: 0 0 0.65rem;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.term-entry h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.term-entry h2 a:hover {
+  color: var(--itu-accent);
+}
+
+.term-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.term-toc a {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--itu-bg-subtle);
+  font-size: 0.82rem;
+  text-decoration: none;
+}
+
+.article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 1rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--itu-border);
+  color: var(--itu-text-muted);
+}
+
+.tag-inprogress {
+  border-color: #f59e0b;
+  color: #b45309;
+}
+
+:root[data-theme='dark'] .tag-inprogress,
+:root.dark .tag-inprogress {
+  color: #fcd34d;
+}
+
+.article-body hr {
+  border: none;
+  border-top: 1px solid var(--itu-border);
+  margin: 1.5rem 0;
+}
+
+.article-body h2,
+.article-body h3 {
+  scroll-margin-top: calc(var(--itu-nav-height) + 1rem);
+}
+
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.article-body th,
+.article-body td {
+  border: 1px solid var(--itu-border);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+}
+
+.article-body blockquote {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--itu-accent);
+  background: var(--itu-bg-subtle);
+  color: var(--itu-text-muted);
+}

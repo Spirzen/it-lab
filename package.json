@@ -1,0 +1,17 @@
+{
+  "name": "it-lab",
+  "version": "0.1.0",
+  "type": "module",
+  "homepage": "https://lab.spirzen.ru",
+  "scripts": {
+    "dev": "astro dev --port 4331",
+    "build": "astro build",
+    "preview": "astro preview --port 4331"
+  },
+  "dependencies": {
+    "astro": "^5.10.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
