@@ -1,0 +1,68 @@
+---
+import path from 'node:path';
+import {findRepoRoot} from '@/lib/ecosystem.mjs';
+import {loadLabPages} from '@/lib/lab/load-lab.mjs';
+import {getPortalContext} from '@/lib/portal.mjs';
+import PortalLayout from '@/components/PortalLayout.astro';
+import PortalSidebar from '@/components/PortalSidebar.astro';
+
+export async function getStaticPaths() {
+  const contentDir = path.join(findRepoRoot(), 'content/lab');
+  const lab = await loadLabPages(contentDir);
+  return lab.pages.map((page) => ({
+    params: {slug: page.pathSlug},
+    props: {page, sidebar: lab.sidebar},
+  }));
+}
+
+const {page, sidebar} = Astro.props;
+const {navItems, brandHref, brandLabel, ecosystemConfigJson} = getPortalContext();
+const sidebarItems = sidebar.map((item) => ({...item, active: item.href === page.href}));
+---
+
+<PortalLayout
+  title={`${page.title} — Лаборатория IT Universe`}
+  description={page.description || 'Практика и тренажёры Вселенная IT'}
+  brandLabel={brandLabel}
+  brandHref={brandHref}
+  navItems={navItems}
+  hasSidebar={true}
+  ecosystemConfigJson={ecosystemConfigJson}
+>
+  <PortalSidebar slot="sidebar" title="Разделы" items={sidebarItems} />
+
+  <header class="portal-hero">
+    <h1>{page.title}</h1>
+    {page.description ? <p>{page.description}</p> : null}
+  </header>
+
+  <article class="article-body" set:html={page.bodyHtml} />
+
+  {
+    page.relatedLinks.length > 0 ? (
+      <aside class="related-topics" aria-label="Связанные темы">
+        <h2>Связанные темы</h2>
+        <ul>
+          {page.relatedLinks.map((link) => (
+            <li>
+              <a href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noopener noreferrer' : undefined}>
+                {link.title}
+                {link.external ? ' ↗' : ''}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    ) : null
+  }
+
+  <footer class="portal-footer">
+    <p>
+      Часть экосистемы <a href={navItems.find((n) => n.id === 'spirzen')?.href}>Вселенная IT</a>.
+    </p>
+  </footer>
+
+  <script type="module">
+    import '@/lib/embed/play-embed.js';
+  </script>
+</PortalLayout>

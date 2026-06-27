@@ -10,6 +10,7 @@ export default defineConfig({
   site,
   base,
   output: 'static',
+  trailingSlash: 'never',
   vite: {
     resolve: {
       alias: {

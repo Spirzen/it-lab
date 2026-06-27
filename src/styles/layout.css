@@ -309,3 +309,134 @@
   background: var(--itu-bg-subtle);
   color: var(--itu-text-muted);
 }
+
+.related-topics {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--itu-border);
+}
+
+.related-topics h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.related-topics ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.lab-card-list ul {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.lab-card {
+  display: block;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--itu-border);
+  border-radius: var(--itu-radius);
+  background: var(--itu-bg-elevated);
+  text-decoration: none;
+  color: inherit;
+}
+
+.lab-card strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.lab-card span {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--itu-text-muted);
+}
+
+.itu-play-embed {
+  margin: 1.25rem 0;
+  border: 1px solid var(--itu-border);
+  border-radius: var(--itu-radius);
+  background: var(--itu-bg-elevated);
+  overflow: hidden;
+}
+
+.itu-play-embed__gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  min-height: inherit;
+  padding: 1.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+  text-align: center;
+}
+
+.itu-play-embed__gate-title {
+  font-weight: 600;
+}
+
+.itu-play-embed__gate-hint {
+  font-size: 0.88rem;
+  color: var(--itu-text-muted);
+}
+
+.itu-play-embed__frame-host {
+  position: relative;
+}
+
+.itu-play-embed__frame {
+  display: block;
+  width: 100%;
+  border: none;
+  background: var(--itu-bg);
+}
+
+.itu-play-embed__loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.9rem;
+  color: var(--itu-text-muted);
+  background: var(--itu-bg-subtle);
+}
+
+.itu-play-embed__caption {
+  padding: 0.55rem 0.85rem;
+  font-size: 0.82rem;
+  border-top: 1px solid var(--itu-border);
+}
+
+.itu-code-embed {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  border: 1px dashed var(--itu-border);
+  border-radius: var(--itu-radius);
+  background: var(--itu-bg-subtle);
+}
+
+.itu-code-embed__stub {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.callout {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--itu-radius);
+  border: 1px solid var(--itu-border);
+  background: var(--itu-bg-subtle);
+}
+
+.callout-title {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
