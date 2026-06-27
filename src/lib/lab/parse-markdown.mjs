@@ -5,6 +5,7 @@ import {
   fixCrossPortalLinks,
   fixImageUrls,
   stripJsxComments,
+  preprocessMarkdownInHtmlBlocks,
 } from '../markdown/shared.mjs';
 
 export {parseLabMarkdownFile, listMarkdownFilesRecursive, slugToPathSegments, pathSegmentsToHref, readCategoryLabel};
@@ -107,8 +108,9 @@ function prepareLabBody(content, relPath) {
   body = body.replace(/<DocCardList\s*\/>/g, '<!-- DOC_CARD_LIST -->');
   body = stripRemainingJsx(body);
   body = stripArticleTags(body);
-  body = fixImageUrls(body, relPath, '/doc-assets/lab');
   body = fixCrossPortalLinks(body);
+  body = preprocessMarkdownInHtmlBlocks(body);
+  body = fixImageUrls(body, relPath, '/doc-assets/lab');
   return body.trim();
 }
 

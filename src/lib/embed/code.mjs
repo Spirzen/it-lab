@@ -1,3 +1,5 @@
+import {readEcosystemDomain} from './ecosystem-domains.js';
+
 export const CODE_PRODUCTION_URL = 'https://code.spirzen.ru';
 export const CODE_LOCAL_URL = 'http://localhost:4321';
 
@@ -8,10 +10,10 @@ export const CODE_TRUSTED_ORIGINS = [
 ];
 
 export function getCodeBaseUrl() {
-  if (import.meta.env.DEV || process.env.IT_PORTAL_DEV === '1') {
+  if (import.meta.env?.DEV) {
     return CODE_LOCAL_URL;
   }
-  return CODE_PRODUCTION_URL;
+  return readEcosystemDomain('code', CODE_PRODUCTION_URL);
 }
 
 export function buildCodeEmbedUrl(baseUrl, example) {

@@ -1,3 +1,5 @@
+import {readEcosystemDomain} from './ecosystem-domains.js';
+
 export const PLAY_PRODUCTION_URL = 'https://play.spirzen.ru';
 export const PLAY_LOCAL_URL = 'http://localhost:4322';
 
@@ -8,10 +10,10 @@ export const PLAY_TRUSTED_ORIGINS = [
 ];
 
 export function getPlayBaseUrl() {
-  if (import.meta.env.DEV || process.env.IT_PORTAL_DEV === '1') {
+  if (import.meta.env?.DEV) {
     return PLAY_LOCAL_URL;
   }
-  return PLAY_PRODUCTION_URL;
+  return readEcosystemDomain('play', PLAY_PRODUCTION_URL);
 }
 
 export function buildPlayEmbedUrl(baseUrl, example) {

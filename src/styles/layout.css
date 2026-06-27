@@ -429,6 +429,12 @@
   overflow: hidden;
 }
 
+.itu-code-embed--pending {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--itu-accent) 40%, var(--itu-border));
+  background: color-mix(in srgb, var(--itu-accent) 6%, var(--itu-bg-elevated));
+}
+
 .itu-code-embed__gate {
   display: flex;
   flex-direction: column;

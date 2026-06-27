@@ -74,3 +74,60 @@ export function buildPortalCardListHtml(items, ariaLabel = 'Материалы �
     .join('');
   return `<nav class="portal-card-list" aria-label="${escapeHtml(ariaLabel)}"><ul class="portal-card-list__grid">${cards}</ul></nav>`;
 }
+
+/** @param {string} text */
+function convertInlineMarkdown(text) {
+  return text
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
+      const safeHref = href.replace(/"/g, '&quot;');
+      return `<a href="${safeHref}">${label}</a>`;
+    })
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+}
+
+/**
+ * Markdown внутри HTML-блоков (callout, faq) не обрабатывается remark — конвертируем до рендера.
+ * @param {string} content
+ */
+export function preprocessMarkdownInHtmlBlocks(content) {
+  return content.replace(
+    /(<div class="callout-body">\s*)([\s\S]*?)(\s*<\/div>)/g,
+    (_, open, inner, close) => {
+      const body = inner
+        .split('\n')
+        .map((line) => {
+          const trimmed = line.trim();
+          if (!trimmed) {
+            return '';
+          }
+          if (/^<\/?[a-z]/i.test(trimmed)) {
+            return line;
+          }
+          return `<p>${convertInlineMarkdown(trimmed)}</p>`;
+        })
+        .filter(Boolean)
+        .join('\n');
+      return `${open}${body}${close}`;
+    },
+  );
+}
+
+/**
+ * Страховка после remark: оставшиеся [text](url) в callout/faq.
+ * @param {string} html
+ */
+export function fixMarkdownLinksInHtmlBlocks(html) {
+  const replaceLinks = (chunk) =>
+    chunk.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+
+  let out = html.replace(
+    /(<div class="callout-body">)([\s\S]*?)(<\/div>)/g,
+    (_, open, inner, close) => `${open}${replaceLinks(inner)}${close}`,
+  );
+  out = out.replace(
+    /(<p class="faq-(?:a|q)">)([\s\S]*?)(<\/p>)/g,
+    (_, open, inner, close) => `${open}${replaceLinks(inner)}${close}`,
+  );
+  return out;
+}
