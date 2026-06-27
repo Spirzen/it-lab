@@ -1,0 +1,294 @@
+/* Стили тела статьи — адаптация theme-doc-markdown из it-knowledge-base */
+
+.article-shell {
+  background: var(--itu-bg-elevated);
+  border-radius: var(--itu-radius);
+  box-shadow: var(--itu-shadow);
+  padding: clamp(1.25rem, 3vw, 2rem);
+  margin-bottom: 2rem;
+}
+
+.portal-hero {
+  margin: 0 0 1.5rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: var(--itu-radius);
+  background: linear-gradient(135deg, var(--itu-accent-soft) 0%, color-mix(in srgb, var(--itu-bg-subtle) 80%, transparent) 100%);
+  border: 1px solid color-mix(in srgb, var(--itu-accent) 18%, var(--itu-border));
+}
+
+.portal-hero h1 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.15;
+}
+
+.portal-hero p {
+  margin: 0;
+  color: var(--itu-text-muted);
+  max-width: 65ch;
+}
+
+.article-body {
+  font-feature-settings: 'liga' 1;
+  hyphens: auto;
+  line-height: 1.7;
+}
+
+.article-body > :first-child {
+  margin-top: 0;
+}
+
+.article-body h1 {
+  font-size: 1.75rem;
+  margin: 0 0 1rem;
+  line-height: 1.2;
+}
+
+.article-body h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--itu-border);
+  scroll-margin-top: calc(var(--itu-nav-height) + 1rem);
+}
+
+.article-body h3 {
+  font-size: 1.12rem;
+  margin: 1.5rem 0 0.5rem;
+  scroll-margin-top: calc(var(--itu-nav-height) + 1rem);
+}
+
+.article-body h4,
+.article-body h5,
+.article-body h6 {
+  margin: 1.25rem 0 0.4rem;
+  scroll-margin-top: calc(var(--itu-nav-height) + 1rem);
+}
+
+.article-body p {
+  margin: 0 0 1rem;
+}
+
+.article-body p + p {
+  margin-top: 0.35rem;
+}
+
+.article-body ul,
+.article-body ol {
+  margin: 0 0 1rem;
+  padding-left: 1.35rem;
+}
+
+.article-body li {
+  margin: 0.25rem 0;
+}
+
+.article-body li > p {
+  margin: 0.15rem 0;
+}
+
+.article-body a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+.article-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto;
+  border-radius: var(--itu-radius-sm);
+  border: 1px solid var(--itu-border);
+  background: var(--itu-bg-subtle);
+}
+
+.article-body hr {
+  border: none;
+  border-top: 1px solid var(--itu-border);
+  margin: 1.75rem 0;
+}
+
+.article-body blockquote {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--itu-accent);
+  background: var(--itu-bg-subtle);
+  color: var(--itu-text-muted);
+  border-radius: 0 var(--itu-radius-sm) var(--itu-radius-sm) 0;
+}
+
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  margin: 1rem 0 1.25rem;
+  display: block;
+  overflow-x: auto;
+}
+
+.article-body th,
+.article-body td {
+  border: 1px solid var(--itu-border);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+}
+
+.article-body th {
+  background: var(--itu-bg-subtle);
+}
+
+.article-body pre {
+  margin: 1rem 0 1.25rem;
+  overflow-x: auto;
+}
+
+.article-body pre code {
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.article-body :not(pre) > code {
+  font-size: 0.9em;
+}
+
+/* Callouts (Docusaurus HTML в MD) */
+.article-body .callout {
+  padding: 1rem 1.15rem;
+  margin: 1.25rem 0;
+  border-radius: var(--itu-radius-sm);
+  border-left: 4px solid var(--itu-accent);
+  background: color-mix(in srgb, var(--itu-accent) 8%, var(--itu-bg-subtle));
+}
+
+.article-body .callout--tip {
+  border-left-color: #1976d2;
+  background: color-mix(in srgb, #1976d2 8%, var(--itu-bg-subtle));
+}
+
+.article-body .callout--note {
+  border-left-color: #7b68ee;
+}
+
+.article-body .callout--warning,
+.article-body .callout--caution {
+  border-left-color: #f57c00;
+  background: color-mix(in srgb, #f57c00 8%, var(--itu-bg-subtle));
+}
+
+.article-body .callout--danger {
+  border-left-color: #d32f2f;
+}
+
+.article-body .callout-title {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.article-body .callout-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Карточки разделов (замена DocCardList) */
+.portal-card-list {
+  margin: 1.25rem 0 1.75rem;
+}
+
+.portal-card-list__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  height: 100%;
+  min-height: 5.5rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid var(--itu-border);
+  border-radius: var(--itu-radius);
+  background: var(--itu-bg-elevated);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.portal-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--itu-accent) 35%, var(--itu-border));
+  box-shadow: var(--itu-shadow);
+}
+
+.portal-card__title {
+  display: block;
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: var(--itu-text);
+}
+
+.portal-card__desc {
+  display: block;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--itu-text-muted);
+}
+
+/* Mermaid */
+.article-body .mermaid {
+  margin: 1.25rem 0;
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--itu-border);
+  border-radius: var(--itu-radius-sm);
+  background: var(--itu-bg-subtle);
+}
+
+.article-body pre:has(code.language-mermaid) {
+  display: none;
+}
+
+.related-topics {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--itu-border);
+}
+
+.related-topics h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.related-topics ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.related-topics li {
+  margin: 0.35rem 0;
+}
+
+.itu-game-generator-stub {
+  margin: 1rem 0;
+  padding: 1rem 1.15rem;
+  border: 1px dashed var(--itu-border);
+  border-radius: var(--itu-radius-sm);
+  background: var(--itu-bg-subtle);
+  color: var(--itu-text-muted);
+}
+
+@media (max-width: 768px) {
+  .article-shell {
+    padding: 1rem;
+    border-radius: var(--itu-radius-sm);
+  }
+
+  .portal-card-list__grid {
+    grid-template-columns: 1fr;
+  }
+}

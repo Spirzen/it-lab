@@ -1,11 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
+import {
+  fixCrossPortalLinks,
+  fixImageUrls,
+  stripJsxComments,
+} from '../markdown/shared.mjs';
 
 export {parseLabMarkdownFile, listMarkdownFilesRecursive, slugToPathSegments, pathSegmentsToHref, readCategoryLabel};
-
-const SPIRZEN_BASE = 'https://spirzen.ru';
-const TERMS_BASE = 'https://terms.spirzen.ru';
 
 function listMarkdownFilesRecursive(dir, baseDir = dir) {
   if (!fs.existsSync(dir)) {
@@ -88,22 +90,24 @@ function parseLabMarkdownFile(filePath, contentRoot) {
     description: data.description ?? '',
     sidebarLabel: data.sidebar_label ?? data.title ?? pathSegments.at(-1) ?? '',
     related: Array.isArray(data.related) ? data.related : [],
-    bodyMarkdown: prepareLabBody(content),
+    bodyMarkdown: prepareLabBody(content, relPath),
     categoryLabel: pathSegments.length > 1 ? pathSegments[0] : null,
     isIntro: pathSegments.at(-1) === 'intro' || slug === '/lab/intro',
   };
 }
 
-function prepareLabBody(content) {
+function prepareLabBody(content, relPath) {
   let body = content;
   body = body.replace(/import\s+[\s\S]*?from\s+['"]@theme\/[^'"]+['"];?\s*/g, '');
   body = body.replace(/import\s+[\s\S]*?from\s+['"]@site\/[^'"]+['"];?\s*/g, '');
+  body = stripJsxComments(body);
   body = transformPlayEmbeds(body);
   body = transformCodeEmbeds(body);
   body = transformLabTrainersHub(body);
   body = body.replace(/<DocCardList\s*\/>/g, '<!-- DOC_CARD_LIST -->');
   body = stripRemainingJsx(body);
   body = stripArticleTags(body);
+  body = fixImageUrls(body, relPath, '/doc-assets/lab');
   body = fixCrossPortalLinks(body);
   return body.trim();
 }
@@ -113,7 +117,7 @@ function transformPlayEmbeds(content) {
     const example = readAttr(attrs, 'example');
     const src = readAttr(attrs, 'src');
     const title = readAttr(attrs, 'title');
-    const minHeight = readAttr(attrs, 'minHeight', {jsx: true}) ?? '320';
+    const minHeight = readAttr(attrs, 'minHeight', {jsx: true}) || '320';
     const playProps = readPlayProps(attrs);
     const propsJson = escapeAttr(JSON.stringify(playProps));
     return [
@@ -132,7 +136,7 @@ function transformCodeEmbeds(content) {
   return content.replace(/<ExternalCodeEmbed\s+([\s\S]*?)\/>/g, (_, attrs) => {
     const example = readAttr(attrs, 'example');
     const title = readAttr(attrs, 'title');
-    const minHeight = readAttr(attrs, 'minHeight', {jsx: true}) ?? '280';
+    const minHeight = readAttr(attrs, 'minHeight', {jsx: true}) || '280';
     return [
       `<div class="itu-code-embed"`,
       `data-example="${escapeAttr(example)}"`,
@@ -198,17 +202,6 @@ function stripArticleTags(content) {
     kept.push(line);
   }
   return kept.join('\n');
-}
-
-function fixCrossPortalLinks(content) {
-  let body = content;
-  body = body.replace(/\]\(\/encyclopedia\//g, `](${SPIRZEN_BASE}/encyclopedia/`);
-  body = body.replace(/\]\(\/glossary\//g, `](${TERMS_BASE}/glossary/`);
-  body = body.replace(/\]\(\.\.\/\.\.\/encyclopedia\//g, `](${SPIRZEN_BASE}/encyclopedia/`);
-  body = body.replace(/\]\(\.\.\/encyclopedia\//g, `](${SPIRZEN_BASE}/encyclopedia/`);
-  body = body.replace(/\]\(\.\.\/glossary\//g, `](${TERMS_BASE}/glossary/`);
-  body = body.replace(/\]\(\.\.\/\.\.\/glossary\//g, `](${TERMS_BASE}/glossary/`);
-  return body;
 }
 
 function escapeAttr(value) {

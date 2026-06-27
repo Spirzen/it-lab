@@ -8,6 +8,7 @@ import {
   pathSegmentsToHref,
 } from './parse-markdown.mjs';
 import {renderMarkdownToHtml} from './render-markdown.mjs';
+import {buildPortalCardListHtml} from '../markdown/shared.mjs';
 
 const SPIRZEN_BASE = 'https://spirzen.ru';
 
@@ -73,17 +74,13 @@ function buildDocCardListHtml(page, byHref, contentDir) {
     return '';
   }
 
-  const cards = items
-    .slice(0, 24)
-    .map(
-      (item) =>
-        `<li><a class="lab-card" href="${item.href}"><strong>${escapeHtml(item.title)}</strong>` +
-        (item.description ? `<span>${escapeHtml(item.description)}</span>` : '') +
-        `</a></li>`,
-    )
-    .join('\n');
+  const cards = items.slice(0, 24).map((item) => ({
+    title: item.title,
+    description: item.description,
+    href: item.href,
+  }));
 
-  return `<nav class="lab-card-list" aria-label="Материалы раздела"><ul>${cards}</ul></nav>`;
+  return buildPortalCardListHtml(cards);
 }
 
 function buildRelatedLinks(related) {

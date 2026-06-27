@@ -134,4 +134,6 @@ document.addEventListener('itu-theme-set', () => {
   }
 });
 
+document.addEventListener('astro:page-load', bootCodeEmbeds);
+
 export {bootCodeEmbeds};
