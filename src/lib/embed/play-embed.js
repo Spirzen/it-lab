@@ -4,8 +4,10 @@ import {
   getPlayBaseUrl,
   isTrustedPlayOrigin,
 } from './play.mjs';
+import {initEmbedHost} from './embed-host.js';
 
 const LOADING_MESSAGE = 'Загрузка интерактивного демо…';
+const embedControllers = [];
 
 function readTheme() {
   const stored = localStorage.getItem('itu-portal-theme');
@@ -54,84 +56,20 @@ function initPlayEmbed(host) {
   const playOrigin = new URL(baseUrl).origin;
   const fullPageUrl = src || buildPlayPageUrl(baseUrl, example);
 
-  host.style.minHeight = `${minHeight}px`;
-  host.classList.add('itu-play-embed--pending');
-
-  const gate = document.createElement('button');
-  gate.type = 'button';
-  gate.className = 'itu-play-embed__gate';
-  gate.innerHTML = `<span class="itu-play-embed__gate-title">${escapeHtml(title)}</span>` +
-    `<span class="itu-play-embed__gate-hint">Нажмите, чтобы загрузить интерактивное демо</span>`;
-
-  const frameHost = document.createElement('div');
-  frameHost.className = 'itu-play-embed__frame-host';
-  frameHost.hidden = true;
-
-  const caption = document.createElement('div');
-  caption.className = 'itu-play-embed__caption';
-  caption.innerHTML = `<a href="${fullPageUrl}" target="_blank" rel="noopener noreferrer">` +
-    `Полное демо на play.spirzen.ru ↗</a>`;
-  caption.hidden = true;
-
-  host.append(gate, frameHost, caption);
-
-  let iframe = null;
-  let currentHeight = minHeight;
-
-  const onMessage = (event) => {
-    if (!isTrustedPlayOrigin(event.origin, baseUrl)) {
-      return;
-    }
-    if (!iframe?.contentWindow || event.source !== iframe.contentWindow) {
-      return;
-    }
-    const data = event.data;
-    if (!data || typeof data !== 'object') {
-      return;
-    }
-    if (data.type === 'it-play-embed-height' && typeof data.height === 'number') {
-      currentHeight = Math.max(minHeight, data.height);
-      iframe.style.height = `${currentHeight}px`;
-    }
-  };
-
-  gate.addEventListener('click', () => {
-    gate.remove();
-    frameHost.hidden = false;
-    caption.hidden = false;
-    host.classList.remove('itu-play-embed--pending');
-    host.classList.add('itu-play-embed--active');
-
-    const theme = readTheme();
-    iframe = document.createElement('iframe');
-    iframe.className = 'itu-play-embed__frame';
-    iframe.title = title;
-    iframe.loading = 'eager';
-    iframe.referrerPolicy = 'no-referrer-when-downgrade';
-    iframe.allow = 'fullscreen';
-    iframe.style.height = `${currentHeight}px`;
-    iframe.src = buildEmbedSrc(baseUrl, example, src, playProps, theme);
-
-    const mask = document.createElement('div');
-    mask.className = 'itu-play-embed__loading';
-    mask.setAttribute('role', 'status');
-    mask.textContent = LOADING_MESSAGE;
-    frameHost.append(mask, iframe);
-
-    iframe.addEventListener('load', () => {
-      mask.remove();
-      iframe.contentWindow?.postMessage({type: 'it-play-theme', theme: readTheme()}, playOrigin);
-    });
-
-    window.addEventListener('message', onMessage);
+  const controller = initEmbedHost({
+    kind: 'play',
+    host,
+    title,
+    minHeight,
+    fullPageUrl,
+    buildSrc: (theme) => buildEmbedSrc(baseUrl, example, src, playProps, theme),
+    origin: playOrigin,
+    loadingMessage: LOADING_MESSAGE,
+    gateHint: 'Нажмите, чтобы загрузить интерактивное демо',
+    captionText: 'Полное демо на play.spirzen.ru ↗',
   });
-}
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  embedControllers.push(controller);
 }
 
 function bootPlayEmbeds() {
@@ -144,6 +82,12 @@ function bootPlayEmbeds() {
   }
 }
 
+function broadcastTheme(theme) {
+  for (const controller of embedControllers) {
+    controller.sendTheme(theme);
+  }
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', bootPlayEmbeds);
 } else {
@@ -151,14 +95,9 @@ if (document.readyState === 'loading') {
 }
 
 document.addEventListener('itu-theme-set', () => {
-  const theme = readTheme();
-  const baseUrl = getPlayBaseUrl();
-  const playOrigin = new URL(baseUrl).origin;
-  for (const iframe of document.querySelectorAll('.itu-play-embed__frame')) {
-    iframe.contentWindow?.postMessage({type: 'it-play-theme', theme}, playOrigin);
-  }
+  broadcastTheme(readTheme());
 });
 
 document.addEventListener('astro:page-load', bootPlayEmbeds);
 
-export {bootPlayEmbeds};
+export {bootPlayEmbeds, isTrustedPlayOrigin, getPlayBaseUrl};

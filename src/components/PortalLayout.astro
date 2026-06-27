@@ -3,6 +3,7 @@ import EcosystemNav from './EcosystemNav.astro';
 import '../styles/tokens.css';
 import '../styles/layout.css';
 import '../styles/article.css';
+import '../styles/article-chrome.css';
 
 /** @typedef {{ id: string, label: string, href: string, active?: boolean }} NavItem */
 
@@ -13,6 +14,7 @@ interface Props {
   brandHref: string;
   navItems: NavItem[];
   hasSidebar?: boolean;
+  hasToc?: boolean;
   ecosystemConfigJson?: string;
 }
 
@@ -23,6 +25,7 @@ const {
   brandHref,
   navItems,
   hasSidebar = false,
+  hasToc = false,
   ecosystemConfigJson = '{}',
 } = Astro.props;
 ---
@@ -35,6 +38,7 @@ const {
     <meta name="color-scheme" content="light dark" />
     <title>{title}</title>
     {description ? <meta name="description" content={description} /> : null}
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <script is:inline id="itu-ecosystem-config" type="application/json" set:html={ecosystemConfigJson} />
     <script is:inline>
@@ -56,7 +60,7 @@ const {
   </head>
   <body>
     <EcosystemNav brandLabel={brandLabel} brandHref={brandHref} navItems={navItems} />
-    <div class:list={['portal-shell', hasSidebar && 'has-sidebar']}>
+    <div class:list={['portal-shell', hasSidebar && 'has-sidebar', hasToc && 'has-toc']}>
       <slot name="sidebar" />
       <main class="portal-main" id="main-content">
         <div class="portal-content">

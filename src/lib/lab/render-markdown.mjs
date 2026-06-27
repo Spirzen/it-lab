@@ -1,7 +1,7 @@
 import {remark} from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
-import {fixMarkdownLinksInHtmlBlocks} from '../markdown/shared.mjs';
+import {fixMarkdownLinksInHtmlBlocks, addHeadingIds} from '../markdown/shared.mjs';
 
 const processor = remark().use(remarkGfm).use(remarkHtml, {sanitize: false});
 
@@ -10,5 +10,5 @@ export async function renderMarkdownToHtml(markdown) {
     return '';
   }
   const file = await processor.process(markdown);
-  return fixMarkdownLinksInHtmlBlocks(String(file));
+  return addHeadingIds(fixMarkdownLinksInHtmlBlocks(String(file)));
 }

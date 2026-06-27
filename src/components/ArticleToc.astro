@@ -1,0 +1,35 @@
+---
+interface TocItem {
+  level: number;
+  text: string;
+  id: string;
+}
+
+interface Props {
+  items: TocItem[];
+}
+
+const {items} = Astro.props;
+---
+
+{
+  items.length > 1 ? (
+    <aside class="article-toc" aria-label="Содержание страницы" data-pdf-exclude>
+      <div class="article-toc__head">
+        <p class="article-toc__title">Содержание</p>
+        <button type="button" class="article-toc__toggle" data-toc-collapse aria-expanded="true" aria-label="Свернуть содержание">
+          ‹
+        </button>
+      </div>
+      <nav class="article-toc__nav">
+        <ul>
+          {items.map((item) => (
+            <li class:list={['article-toc__item', item.level === 3 && 'is-h3']}>
+              <a href={`#${item.id}`}>{item.text}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  ) : null
+}

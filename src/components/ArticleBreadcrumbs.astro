@@ -1,0 +1,31 @@
+---
+interface Crumb {
+  label: string;
+  href: string;
+  current?: boolean;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const {items} = Astro.props;
+---
+
+{
+  items.length > 0 ? (
+    <nav class="article-breadcrumbs" aria-label="Хлебные крошки">
+      <ol>
+        {items.map((item) => (
+          <li>
+            {item.current ? (
+              <span aria-current="page">{item.label}</span>
+            ) : (
+              <a href={item.href}>{item.label}</a>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  ) : null
+}

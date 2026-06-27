@@ -1,23 +1,82 @@
 ---
+interface SidebarLink {
+  slug: string;
+  label: string;
+  href: string;
+  active?: boolean;
+}
+
+interface SidebarCategory {
+  type: 'category';
+  slug: string;
+  label: string;
+  href: string;
+  active?: boolean;
+  open?: boolean;
+  children: SidebarLink[];
+}
+
+interface SidebarFlatLink {
+  type: 'link';
+  slug: string;
+  label: string;
+  href: string;
+  active?: boolean;
+}
+
+type SidebarItem = SidebarCategory | SidebarFlatLink;
+
 interface Props {
   title?: string;
-  items: Array<{ slug: string; label: string; href: string; active?: boolean }>;
+  items: SidebarItem[];
 }
 
 const {title = 'Разделы', items} = Astro.props;
 ---
 
 <aside class="portal-sidebar" aria-label={title}>
-  <p class="portal-sidebar__title">{title}</p>
-  <ul class="portal-sidebar__list">
-    {
-      items.map((item) => (
-        <li>
-          <a class:list={['portal-sidebar__link', item.active && 'is-active']} href={item.href}>
-            {item.label}
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+  <div class="portal-sidebar__head">
+    <p class="portal-sidebar__title">{title}</p>
+    <button type="button" class="portal-sidebar__collapse" data-sidebar-collapse aria-expanded="true" aria-label="Свернуть боковую панель">
+      ‹
+    </button>
+  </div>
+  <nav class="portal-sidebar__nav">
+    <ul class="portal-sidebar__list">
+      {
+        items.map((item) =>
+          item.type === 'link' ? (
+            <li>
+              <a class:list={['portal-sidebar__link', item.active && 'is-active']} href={item.href}>
+                {item.label}
+              </a>
+            </li>
+          ) : (
+            <li class="portal-sidebar__category">
+              <details class="portal-sidebar__details" open={item.open ?? item.active}>
+                <summary class="portal-sidebar__summary">
+                  <a class:list={['portal-sidebar__link', item.active && 'is-active']} href={item.href}>
+                    {item.label}
+                  </a>
+                </summary>
+                {
+                  item.children.length > 0 ? (
+                    <ul class="portal-sidebar__sublist">
+                      {item.children.map((child) => (
+                        <li>
+                          <a class:list={['portal-sidebar__sublink', child.active && 'is-active']} href={child.href}>
+                            {child.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null
+                }
+              </details>
+            </li>
+          ),
+        )
+      }
+    </ul>
+  </nav>
 </aside>

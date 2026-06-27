@@ -131,3 +131,37 @@ export function fixMarkdownLinksInHtmlBlocks(html) {
   );
   return out;
 }
+
+/** @param {string} text */
+export function slugifyHeading(text) {
+  return String(text ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s-]/gu, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .slice(0, 80);
+}
+
+/** @param {string} markdown */
+export function extractTocFromMarkdown(markdown) {
+  const items = [];
+  for (const line of markdown.split('\n')) {
+    const h2 = /^##\s+(.+)$/.exec(line.trim());
+    const h3 = /^###\s+(.+)$/.exec(line.trim());
+    if (h2) {
+      items.push({level: 2, text: h2[1].trim(), id: slugifyHeading(h2[1])});
+    } else if (h3) {
+      items.push({level: 3, text: h3[1].trim(), id: slugifyHeading(h3[1])});
+    }
+  }
+  return items;
+}
+
+/** @param {string} html */
+export function addHeadingIds(html) {
+  return html.replace(/<h([23])>([^<]+)<\/h\1>/g, (_, level, text) => {
+    const id = slugifyHeading(text);
+    return `<h${level} id="${id}">${text}</h${level}>`;
+  });
+}

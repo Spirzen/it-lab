@@ -5,6 +5,9 @@ import {loadLabPages} from '@/lib/lab/load-lab.mjs';
 import {getPortalContext} from '@/lib/portal.mjs';
 import PortalLayout from '@/components/PortalLayout.astro';
 import PortalSidebar from '@/components/PortalSidebar.astro';
+import ArticleBreadcrumbs from '@/components/ArticleBreadcrumbs.astro';
+import ArticleToolbar from '@/components/ArticleToolbar.astro';
+import ArticleToc from '@/components/ArticleToc.astro';
 
 export async function getStaticPaths() {
   const contentDir = path.join(findRepoRoot(), 'content/lab');
@@ -17,7 +20,22 @@ export async function getStaticPaths() {
 
 const {page, sidebar} = Astro.props;
 const {navItems, brandHref, brandLabel, ecosystemConfigJson} = getPortalContext();
-const sidebarItems = sidebar.map((item) => ({...item, active: item.href === page.href}));
+
+const sidebarItems = sidebar.map((item) => {
+  if (item.type === 'category') {
+    const childActive = item.children.some((child) => child.href === page.href);
+    return {
+      ...item,
+      active: item.href === page.href,
+      open: childActive || item.href === page.href || page.categoryLabel === item.label,
+      children: item.children.map((child) => ({
+        ...child,
+        active: child.href === page.href,
+      })),
+    };
+  }
+  return {...item, active: item.href === page.href};
+});
 ---
 
 <PortalLayout
@@ -27,18 +45,26 @@ const sidebarItems = sidebar.map((item) => ({...item, active: item.href === page
   brandHref={brandHref}
   navItems={navItems}
   hasSidebar={true}
+  hasToc={page.toc.length > 1}
   ecosystemConfigJson={ecosystemConfigJson}
 >
   <PortalSidebar slot="sidebar" title="Разделы" items={sidebarItems} />
+
+  <ArticleBreadcrumbs items={page.breadcrumbs} />
 
   <header class="portal-hero">
     <h1>{page.title}</h1>
     {page.description ? <p>{page.description}</p> : null}
   </header>
 
-  <article class="article-shell">
-    <div class="article-body" set:html={page.bodyHtml} />
-  </article>
+  <ArticleToolbar title={page.title} href={page.href} />
+
+  <div class="article-layout">
+    <article class="article-shell">
+      <div class="article-body" set:html={page.bodyHtml} />
+    </article>
+    <ArticleToc items={page.toc} />
+  </div>
 
   {
     page.relatedLinks.length > 0 ? (

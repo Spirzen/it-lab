@@ -8,7 +8,7 @@ import {
   pathSegmentsToHref,
 } from './parse-markdown.mjs';
 import {renderMarkdownToHtml} from './render-markdown.mjs';
-import {buildPortalCardListHtml} from '../markdown/shared.mjs';
+import {buildPortalCardListHtml, extractTocFromMarkdown} from '../markdown/shared.mjs';
 
 const SPIRZEN_BASE = 'https://spirzen.ru';
 
@@ -39,12 +39,32 @@ async function buildLabPage(page, byHref, contentDir) {
     markdown = markdown.replace('<!-- DOC_CARD_LIST -->', cardsHtml);
   }
 
+  const toc = extractTocFromMarkdown(markdown);
+
   return {
     ...page,
     pathSlug: page.pathSegments.join('/'),
     bodyHtml: await renderMarkdownToHtml(markdown),
     relatedLinks: buildRelatedLinks(page.related),
+    breadcrumbs: buildBreadcrumbs(page),
+    toc,
   };
+}
+
+function buildBreadcrumbs(page) {
+  const crumbs = [{label: 'Лаборатория', href: '/lab/intro'}];
+  if (page.categoryLabel && page.href !== '/lab/intro') {
+    crumbs.push({
+      label: page.categoryLabel,
+      href: `/lab/${page.categoryLabel}/intro`,
+    });
+  }
+  if (!page.isIntro || page.pathSegments.length > 1) {
+    crumbs.push({label: page.title, href: page.href, current: true});
+  } else if (page.href === '/lab/intro') {
+    crumbs[0].current = true;
+  }
+  return crumbs;
 }
 
 function buildDocCardListHtml(page, byHref, contentDir) {
@@ -133,7 +153,7 @@ function buildSidebar(pages) {
   const items = [];
   const rootIntro = pages.find((p) => p.href === '/lab/intro');
   if (rootIntro) {
-    items.push({slug: 'intro', label: 'О разделе', href: '/lab/intro'});
+    items.push({type: 'link', slug: 'intro', label: 'О разделе', href: '/lab/intro'});
   }
 
   const categories = new Map();
@@ -151,13 +171,22 @@ function buildSidebar(pages) {
     a[0].localeCompare(b[0], 'ru'),
   )) {
     const intro = categoryPages.find((p) => p.isIntro);
-    if (intro) {
-      items.push({
-        slug: intro.pathSlug,
-        label,
-        href: intro.href,
-      });
-    }
+    const children = categoryPages
+      .filter((p) => !p.isIntro)
+      .sort((a, b) => a.title.localeCompare(b.title, 'ru'))
+      .map((p) => ({
+        slug: p.pathSlug,
+        label: p.title,
+        href: p.href,
+      }));
+
+    items.push({
+      type: 'category',
+      slug: intro?.pathSlug ?? label,
+      label,
+      href: intro?.href ?? `/lab/${label}/intro`,
+      children,
+    });
   }
 
   return items;

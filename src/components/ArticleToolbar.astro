@@ -1,0 +1,19 @@
+---
+interface Props {
+  title: string;
+  href?: string;
+}
+
+const {title, href = ''} = Astro.props;
+---
+
+<div class="article-toolbar" data-pdf-exclude>
+  <div class="article-toolbar__actions">
+    <button type="button" class="article-toolbar__btn" data-article-share data-title={title} data-url={href}>
+      Поделиться
+    </button>
+    <button type="button" class="article-toolbar__btn" data-article-pdf data-title={title}>
+      Сохранить PDF
+    </button>
+  </div>
+</div>
