@@ -1,0 +1,31 @@
+---
+import ItuLoader from './ItuLoader.astro';
+import '../styles/itu-loader.css';
+
+interface Props {
+  to: string;
+  label?: string;
+  title?: string;
+}
+
+const {to, label = 'Переход…', title = 'Вселенная IT'} = Astro.props;
+const absoluteTo = to.startsWith('http') ? to : new URL(to, Astro.site ?? Astro.url).href;
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content={`0;url=${absoluteTo}`} />
+    <link rel="canonical" href={absoluteTo} />
+    <meta name="robots" content="noindex" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <ItuLoader variant="page" {title} label={label} />
+    <script is:inline define:vars={{absoluteTo}}>
+      window.location.replace(absoluteTo);
+    </script>
+  </body>
+</html>
