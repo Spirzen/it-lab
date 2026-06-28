@@ -5,6 +5,7 @@ import {
   isTrustedPlayOrigin,
 } from './play.mjs';
 import {initEmbedHost} from './embed-host.js';
+import {resolveEmbedDataPayload} from './article-extract.js';
 
 const LOADING_MESSAGE = 'Загрузка интерактивного демо…';
 const embedControllers = [];
@@ -52,6 +53,8 @@ function initPlayEmbed(host) {
     playProps = {};
   }
 
+  const embedDataSource = host.dataset.embedDataSource ?? '';
+
   const baseUrl = getPlayBaseUrl();
   const playOrigin = new URL(baseUrl).origin;
   const fullPageUrl = src || buildPlayPageUrl(baseUrl, example);
@@ -67,6 +70,15 @@ function initPlayEmbed(host) {
     loadingMessage: LOADING_MESSAGE,
     gateHint: 'Нажмите, чтобы загрузить интерактивное демо',
     captionText: 'Полное демо на play.spirzen.ru ↗',
+    onIframeReady(iframe) {
+      if (!embedDataSource || !iframe.contentWindow) {
+        return;
+      }
+      const payload = resolveEmbedDataPayload(embedDataSource, host);
+      if (payload) {
+        iframe.contentWindow.postMessage({type: 'it-play-embed-data', payload}, playOrigin);
+      }
+    },
   });
 
   embedControllers.push(controller);

@@ -22,6 +22,7 @@ function escapeHtml(value) {
  * @param {string} options.gateHint
  * @param {string} options.captionText
  * @param {(data: object) => boolean} [options.onMessage]
+ * @param {(iframe: HTMLIFrameElement) => void} [options.onIframeReady]
  */
 export function initEmbedHost(options) {
   const {
@@ -36,6 +37,7 @@ export function initEmbedHost(options) {
     gateHint,
     captionText,
     onMessage,
+    onIframeReady,
   } = options;
 
   const prefix = kind === 'play' ? 'itu-play-embed' : 'itu-code-embed';
@@ -181,6 +183,9 @@ export function initEmbedHost(options) {
     iframe.addEventListener('load', () => {
       mask.remove();
       iframe.contentWindow?.postMessage({type: themeType, theme}, origin);
+      if (iframe) {
+        onIframeReady?.(iframe);
+      }
     });
   });
 

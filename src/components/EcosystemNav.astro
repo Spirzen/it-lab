@@ -14,7 +14,14 @@ const {brandLabel, brandHref, navItems} = Astro.props;
 
 <header class="ecosystem-nav">
   <a class="ecosystem-nav__brand" href={brandHref}>
-    <span class="ecosystem-nav__brand-mark" aria-hidden="true">IT</span>
+    <img
+      class="ecosystem-nav__brand-mark"
+      src="/img/docusaurus.png"
+      alt=""
+      width="28"
+      height="28"
+      decoding="async"
+    />
     <span>{brandLabel}</span>
   </a>
   <nav class="ecosystem-nav__links" aria-label="Экосистема Вселенная IT">

@@ -1,23 +1,24 @@
 {
-  "name": "it-lab",
-  "version": "0.1.0",
-  "type": "module",
-  "homepage": "https://lab.spirzen.ru",
-  "scripts": {
-    "dev": "astro dev --port 4331",
-    "build": "astro build",
-    "preview": "astro preview --port 4331",
-    "sync:lab": "node scripts/sync-lab.mjs"
-  },
-  "dependencies": {
-    "astro": "^5.10.0",
-    "gray-matter": "^4.0.3",
-    "remark": "^15.0.1",
-    "remark-gfm": "^4.0.1",
-    "remark-html": "^16.0.1",
-    "mermaid": "^11.6.0"
-  },
-  "engines": {
-    "node": ">=20.0.0"
-  }
+    "name":  "it-lab",
+    "version":  "0.1.0",
+    "type":  "module",
+    "homepage":  "https://lab.spirzen.ru",
+    "scripts":  {
+                    "dev":  "astro dev --port 4331",
+                    "build":  "astro build",
+                    "preview":  "astro preview --port 4331",
+                    "sync:lab":  "node scripts/sync-lab.mjs"
+                },
+    "dependencies":  {
+                         "astro":  "^5.10.0",
+                         "gray-matter":  "^4.0.3",
+                         "remark":  "^15.0.1",
+                         "remark-gfm":  "^4.0.1",
+                         "remark-html":  "^16.0.1",
+                         "mermaid":  "^11.6.0",
+                         "@astrojs/sitemap":  "^3.4.1"
+                     },
+    "engines":  {
+                    "node":  "\u003e=20.0.0"
+                }
 }

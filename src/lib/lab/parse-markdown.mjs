@@ -105,6 +105,8 @@ function prepareLabBody(content, relPath) {
   body = transformPlayEmbeds(body);
   body = transformCodeEmbeds(body);
   body = transformLabTrainersHub(body);
+  body = transformDeveloperExamPlay(body);
+  body = transformRandomQuestionFromArticle(body);
   body = body.replace(/<DocCardList\s*\/>/g, '<!-- DOC_CARD_LIST -->');
   body = stripRemainingJsx(body);
   body = fixCrossPortalLinks(body);
@@ -150,6 +152,40 @@ function transformCodeEmbeds(content) {
 
 function transformLabTrainersHub(content) {
   return content.replace(/<LabTrainersHub\s*\/>/g, '<div class="itu-trainers-hub"></div>');
+}
+
+const EXAM_LEVEL_TITLES = {
+  junior: 'Экзамен · Junior',
+  middle: 'Экзамен · Middle',
+  senior: 'Экзамен · Senior',
+};
+
+function transformDeveloperExamPlay(content) {
+  return content.replace(/<DeveloperExamPlay\s+([\s\S]*?)\/>/g, (_, attrs) => {
+    const level = readAttr(attrs, 'level') || 'junior';
+    const title = EXAM_LEVEL_TITLES[level] ?? EXAM_LEVEL_TITLES.junior;
+    const propsJson = escapeAttr(JSON.stringify({level}));
+    return [
+      `<div class="itu-play-embed"`,
+      `data-example="lab/developer-exam-play"`,
+      `data-title="${escapeAttr(title)}"`,
+      `data-min-height="480"`,
+      `data-play-props="${propsJson}"`,
+      `data-embed-data-source="article-exam">`,
+      `</div>`,
+    ].join(' ');
+  });
+}
+
+function transformRandomQuestionFromArticle(content) {
+  return content.replace(/<RandomQuestionFromArticle\s*\/>/g, [
+    `<div class="itu-article-question-picker"`,
+    `data-title="Случайный вопрос"`,
+    `data-subtitle="Вопрос из блоков «Вопрос» в тексте лабораторной работы."`,
+    `data-empty-message="Вопросы не найдены в этой статье."`,
+    `data-error-hint="Компонент ищет заголовки «#### Вопрос» и берёт ближайший текстовый блок сразу после них.">`,
+    `</div>`,
+  ].join(' '));
 }
 
 function readAttr(attrs, name, options = {}) {
